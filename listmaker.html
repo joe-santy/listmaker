@@ -1,0 +1,150 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>List Maker</title>
+  <meta name="description" content="List Maker">
+  <meta name="author" content="Joseph Santy">
+
+  <script type="module" src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.esm.js"></script>
+  <script nomodule="" src="https://unpkg.com/@ionic/core@latest/dist/ionic/ionic.js"></script>
+  <link href="https://unpkg.com/@ionic/core@latest/css/ionic.bundle.css" rel="stylesheet">
+
+  <style>
+    textarea {
+      height: 100%;
+    }
+
+    #output {
+      height: 100%;
+    }
+
+    #outputCard {
+      height: 100%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <ion-app>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>List Maker</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-card>
+        <ion-card-content>
+          <ion-item>
+            <ion-textarea rows="8" id="entryInput" placeholder="Input raw data"></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-button id="entryBtn">Get List</ion-button>
+            <input type="checkbox" onclick="dq()"></input>
+            <ion-label>Double Quotes</ion-label>
+            <input type="checkbox" onclick="sq()"></input>
+            <ion-label>Single Quotes</ion-label>
+            <input type="checkbox" onclick="c()"></input>
+            <ion-label>Commas</ion-label>
+            <input type="checkbox" onclick="s()"></input>
+            <ion-label>Spaces</ion-label>
+             <input type="checkbox" onclick="nl()"></input>
+            <ion-label>New Line</ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+      <ion-card id="outputCard">
+        <ion-card-content id='output'>
+
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
+  </ion-app>
+  <ion-alert-controller></ion-alert-controller>
+  <script>
+    const msgInput = document.querySelector("#entryInput");
+    const button = document.querySelector("#entryBtn");
+    const output = document.querySelector("#output");
+    const alert = document.querySelector('ion-alert-controller');
+    let doubleQuotes = false;
+    let singleQuotes = false;
+    let commas = false;
+    let spaces = false;
+    let newLine = false;
+    
+    function sq() {
+      return singleQuotes = singleQuotes === true ? false : true;
+    }
+
+    function dq() {
+      return doubleQuotes = (doubleQuotes === true) ? false : true;
+    }
+
+    function c() {
+      return commas = (commas === true) ? false : true;
+    }
+
+    function s() {
+      return spaces = (spaces === true) ? false : true;
+    }
+    
+    function nl() {
+      return newLine = (newLine === true) ? false : true;
+    }
+
+    button.addEventListener("click", () => {
+        const message = msgInput.value;
+        let inputs = message.split("\n");
+        let last = inputs[inputs.length - 1];
+        inputs = inputs.slice(0, -1);
+
+        if (singleQuotes) {
+        	inputs = inputs.map(inp => {
+        	  return "'" + inp + "'";
+            });
+          last = "'" + last + "'";
+        }
+        if (commas) {
+        	inputs = inputs.map(inp => {
+        	  return inp + ",";
+            });
+        }
+        if (doubleQuotes) {
+        	inputs = inputs.map(inp => {
+        	  return '"' + inp + '"';
+            });
+          last = '"' + last + '"';
+        }
+        if (spaces) {
+        	inputs = inputs.map(inp => {
+        	  return inp + " ";
+            });
+        }
+        if (newLine) {
+        	inputs = inputs.map(inp => {
+        	  return inp + "\n";
+            });
+        }
+
+        inputs.push(last);
+        
+        console.log(inputs);
+
+        let newMessage = "";
+        for (let i = 0; i < inputs.length; i++) {
+          newMessage = newMessage + inputs[i];
+        }          
+        console.log(newMessage);
+
+        const newEl = document.createElement('ion-textarea');
+        newEl.value = newMessage;
+        output.appendChild(newEl);
+
+        msgInput.value = '';
+    });
+  </script>
+</body>
+</html>
